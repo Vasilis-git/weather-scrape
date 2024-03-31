@@ -35,4 +35,6 @@ class CrawlingSpider(CrawlSpider):
         #    "min-temp": response.css(".min-ln1::text").get().replace("\n", "").replace("\t", "").replace(" ", "")
         # }
 
+        # test commit
+
 # response.css("#province-navigation .province- a[href]::text").getall()

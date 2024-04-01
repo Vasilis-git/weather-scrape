@@ -1,6 +1,15 @@
 import scrapy
 from datetime import datetime as dt
 
+
+def convertDay(day):
+    details = day.split()
+    switcher = {
+        "Απρ:": '4'
+    }
+    return str(int(details[1])) + '/' + switcher.get(details[2], details[2])
+
+
 class OkairosHourlySpider(scrapy.Spider):
     name = 'hourly_spider'
     allowed_domains = ['https://www.okairos.gr/τρίπολη.html?v=ωριαία']
@@ -53,14 +62,14 @@ class OkairosHourlySpider(scrapy.Spider):
                         "\t", "").replace(",", ".")[:-2])
                 b = int(response.xpath('//*[@class="wnfp"]/table[1]/tr[3]/td[5]/text()').get().strip())
                 wind = float(self.bofortToKm(b))
-                day = self.convertDay(day)
+
                 yield {
                     # 'id': source + ' ' + timestr,
                     'src': source,
                     'city': city,
                     # 'time': time,
                     'timecrawl': dt.now(),
-                    'day': day,
+                    'day': convertDay(day),
                     'hour': hour,
                     'temperature': temperature,
                     'wind_km': wind,

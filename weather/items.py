@@ -6,7 +6,9 @@
 import scrapy
 
 
-class OkairosItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class weatherItem(scrapy.Item):
+    # define items here, ex:
+    name = scrapy.Field()
+
+
+

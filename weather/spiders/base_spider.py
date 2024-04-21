@@ -2,7 +2,7 @@ import scrapy
 from datetime import datetime as dt
 from datetime import date
 import datetime
-from ..items import OkairosItem
+#from ..items import OkairosItem
 
 
 class OkairosSpiderSpider(scrapy.Spider):

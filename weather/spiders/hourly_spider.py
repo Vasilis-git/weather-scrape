@@ -1,5 +1,6 @@
 import scrapy
 from datetime import datetime as dt
+from ..functions import bofortToKm
 
 
 def convertDay(day):
@@ -15,25 +16,6 @@ class OkairosHourlySpider(scrapy.Spider):
     allowed_domains = ['okairos.gr']
     start_urls = ['https://www.okairos.gr/τρίπολη.html?v=ωριαία']
 
-    @staticmethod
-    def bofortToKm(b):
-        switcher = {
-            0: 1,
-            1: 3.5,
-            2: 8,
-            3: 16,
-            4: 25,
-            5: 33,
-            6: 45,
-            7: 56,
-            8: 69,
-            9: 80,
-            10: 96,
-            11: 110,
-            12: 124
-        }
-        return switcher.get(b, 0)
-
     def parse(self, response):
         # days = response.xpath('//div[@class="wnfp"]').getall()
         source = 'okairos.gr'
@@ -43,7 +25,7 @@ class OkairosHourlySpider(scrapy.Spider):
         # timestr = timeutc.strftime("%d/%m/%Y, %H:%M")
 
         # tr are for different hours
-        counter = 1;
+        counter = 1
         for day in response.xpath('//div[@class="wnfp"]/h3/text()').getall():
             for i in range(2,
                            int(response.xpath('count(//*[@class="wnfp"]/table[' + str(counter) + ']//tr)').get()[:-2])):
@@ -61,7 +43,7 @@ class OkairosHourlySpider(scrapy.Spider):
                         '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[7]/text()').get().replace(
                         "\t", "").replace(",", ".")[:-2])
                 b = int(response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[5]/text()').get().strip())
-                wind = float(self.bofortToKm(b))
+                wind = float(bofortToKm(b))
 
                 yield {
                     # 'id': source + ' ' + timestr,
@@ -77,7 +59,7 @@ class OkairosHourlySpider(scrapy.Spider):
                     'barometer': barometer,
                     'yetos': yetos
                 }
-            counter = counter + 1;
+            counter = counter + 1
 
         # response.xpath('count(//div[@class="wnfp"]/table)').get()
 

@@ -9,8 +9,8 @@ class CrawlingSpider(CrawlSpider):
     start_urls = ['https://www.okairos.gr/']
 
     rules = (
-        Rule(LinkExtractor(allow="", deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση")),
-        Rule(LinkExtractor(allow="v=ωριαία"), callback="parse"),
+        Rule(LinkExtractor(deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση")),
+        Rule(LinkExtractor(allow="v=ωριαία", deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση"), callback="parse"),
     )
 
     def parse(self, response):

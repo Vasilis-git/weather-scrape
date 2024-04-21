@@ -46,21 +46,21 @@ class OkairosHourlySpider(scrapy.Spider):
         counter = 1;
         for day in response.xpath('//div[@class="wnfp"]/h3/text()').getall():
             for i in range(2,
-                           int(response.xpath('count(//*[@class="wnfp"]/table[' + str(counter) + ']/tr)').get()[:-2])):
+                           int(response.xpath('count(//*[@class="wnfp"]/table[' + str(counter) + ']//tr)').get()[:-2])):
                 hour = response.xpath(
-                    '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[@class="hour"]/text()').get()
+                    '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[@class="hour"]/text()').get()
                 temperature = float(response.xpath(
-                    '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[3]/div/text()').get()[:-1])
+                    '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[3]/div/text()').get()[:-1])
                 humidity = float(response.xpath(
-                    '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[9]/text()').get()[:-1])
+                    '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[9]/text()').get()[:-1])
                 barometer = float(
-                    response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(
+                    response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(
                         i) + ']/td[10]/text()').get().replace("\n", "").replace("\t", "")[:-4])
                 yetos = float(
                     response.xpath(
-                        '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[7]/text()').get().replace(
+                        '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[7]/text()').get().replace(
                         "\t", "").replace(",", ".")[:-2])
-                b = int(response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[5]/text()').get().strip())
+                b = int(response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[5]/text()').get().strip())
                 wind = float(self.bofortToKm(b))
 
                 yield {

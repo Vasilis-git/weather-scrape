@@ -1,5 +1,7 @@
 import scrapy
 from datetime import datetime as dt
+from lxml import html
+import requests
 from ..functions import bofortToKm
 
 
@@ -33,64 +35,56 @@ class XalaziSpider(scrapy.Spider):
 
     def parse(self, response):
         source = 'xalazi.gr'
-        city = response.xpath('//div[@class="top"]/div[@class="name"]/text()').get().split()[4]
+        city = response.xpath('//div[@class="top"]/div[@class="name"]/text()').get()[len('Πρόγνωση 5 ημερών για '):]
 
         counter = 1
-        date = ""
+        day = ""
         for table_row in response.xpath('//table[@class="t orangered"]//tr').getall():
             try:
-                date = response.xpath('//table[@class="t orangered"]/tr[' + str(counter) + ']/td[1]/text()')[
-                    1].get().replace(
-                    "\r\n", "")
+                day = response.xpath('//table[@class="t orangered"]/tr[' + str(counter) + ']/td[1]/text()')[
+                    1].get().strip()
             except IndexError:
                 pass  # do nothing
-
-            print(date)
+            hour = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[2]//text()').get().strip()
+            temperature = float(
+                response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[3]//text()').get().strip()[:-2])
+            humidity = float(
+                response.xpath(
+                    '//*[@class="t orangered"]/tr[' + str(counter) + ']/td[4]//text()').get().strip()[:-1])
+            windindex = int(
+                response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().find(" "))
+            b = int(
+                response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get()[
+                :windindex].strip()
+            )
+            wind = float(bofortToKm(b))
+            yield {
+                'src': source,
+                'city': city,
+                'timecrawl': dt.now(),
+                'day': day,
+                'hour': hour,
+                'temperature': temperature,
+                'wind_km': wind,
+                'humidity': humidity,
+                'barometer': "",
+                'yetos': ""
+            }
             counter += 1
 
-        hour = response.xpath('//*[@class="t orangered"]/tr[1]/td[2]//text()').get().replace("\r", "").replace("\n",
-                                                                                                               "").strip()[
-               :2]
-
-        day = response.xpath('//table[@class="t orangered"]/tr[1]/td[1]/text()')[1].get().replace("\r", "").replace(
-            "\n", "").replace(" ", "")
-
-        temperature = float(
-            response.xpath('//*[@class="t orangered"]/tr[1]/td[3]//text()').get().replace("\r", "").replace("\n",
-                                                                                                            "").strip()[
-            :-2])
-        humidity = float(
-            response.xpath('//*[@class="t orangered"]/tr[1]/td[4]//text()').get().replace("\r", "").replace("\n",
-                                                                                                            "").strip()[
-            :-1])
         # windends    = (rows[6].xpath('td//text()')[4].extract()).find(" ")
         # winddire    = (rows[6].xpath('td//text()')[4].extract()).find("at")
-        barometer = float()
-        yetos_index = int()
-        yetos = float()
-        windindex = int(response.xpath('//*[@class="t orangered"]/tr[1]/td[5]//text()').get().find(" "))
-        direction = response.xpath('//*[@class="t orangered"]/tr[1]/td[5]//text()').get().replace("\r", "").replace(
-            "\n", "")[windindex:].strip()
-        b = int(
-            response.xpath('//*[@class="t orangered"]/tr[1]/td[5]//text()').get().replace("\r", "").replace("\n", "")[
-            :windindex].strip())
-        wind = float(bofortToKm(b))
-        """
-        yield {
-            'src': source,
-            'city': city,
-            'timecrawl': dt.now(),
-            'day': day,
-            'hour': hour,
-            'temperature': temperature,
-            'wind_km': wind,
-            'humidity': humidity,
-            'barometer': barometer,
-            'yetos': yetos
-        }
-        """
+        # barometer = float()
+        # yetos_index = int()
+        # yetos = float()
+
+        # direction = response.xpath('//*[@class="t orangered"]/tr[1]/td[5]//text()').get().replace("\r", "").replace(
+        #   "\n", "")[windindex:].strip()
 
     def start_requests(self):
         # Τρίπολη
-        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178',
-                             self.parse)
+        yield scrapy.Request(self.start_urls[0], self.parse)
+        response = requests.get(self.start_urls[0])
+        tree = html.fromstring(response.content)
+        for link in tree.xpath('//div[@class="region-tree clearfix"]//li/a/@href'):
+            yield scrapy.Request(link, self.parse)

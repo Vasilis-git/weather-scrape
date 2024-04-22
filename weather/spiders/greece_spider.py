@@ -1,6 +1,7 @@
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from datetime import datetime as dt
+from ..functions import bofortToKm
 
 
 class CrawlingSpider(CrawlSpider):
@@ -10,7 +11,8 @@ class CrawlingSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση")),
-        Rule(LinkExtractor(allow="v=ωριαία", deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση"), callback="parse"),
+        Rule(LinkExtractor(allow="v=ωριαία", deny="κόσμος|υετός|δορυφόρος|νέφωση|θερμοκρασία|άνεμοι|πίεση"),
+             callback="parse"),
     )
 
     def parse(self, response):
@@ -18,7 +20,7 @@ class CrawlingSpider(CrawlSpider):
         city = response.xpath('//div[@id="intro-text"]/h2/text()').get().split()[3]
 
         # tr are for different hours
-        counter = 1;
+        counter = 1
         for day in response.xpath('//div[@class="wnfp"]/h3/text()').getall():
             for i in range(2,
                            int(response.xpath('count(//*[@class="wnfp"]/table[' + str(counter) + ']/tr)').get()[:-2])):
@@ -35,8 +37,9 @@ class CrawlingSpider(CrawlSpider):
                     response.xpath(
                         '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[7]/text()').get().replace(
                         "\t", "").replace(",", ".")[:-2])
-                b = int(response.xpath('//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[5]/text()').get().strip())
-                wind = float(self.bofortToKm(b))
+                b = int(response.xpath(
+                    '//*[@class="wnfp"]/table[' + str(counter) + ']/tr[' + str(i) + ']/td[5]/text()').get().strip())
+                wind = float(bofortToKm(b))
 
                 yield {
                     # 'id': source + ' ' + timestr,
@@ -52,26 +55,7 @@ class CrawlingSpider(CrawlSpider):
                     'barometer': barometer,
                     'yetos': yetos
                 }
-            counter = counter + 1;
-
-    @staticmethod
-    def bofortToKm(b):
-        switcher = {
-            0: 1,
-            1: 3.5,
-            2: 8,
-            3: 16,
-            4: 25,
-            5: 33,
-            6: 45,
-            7: 56,
-            8: 69,
-            9: 80,
-            10: 96,
-            11: 110,
-            12: 124
-        }
-        return switcher.get(b, 0)
+            counter = counter + 1
 
 
 def convertDay(day):

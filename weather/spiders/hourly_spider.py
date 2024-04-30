@@ -1,15 +1,6 @@
 import scrapy
 from datetime import datetime as dt
-from ..functions import bofortToKm
-
-
-def convertDay(day):
-    details = day.split()
-    switcher = {
-        "Απρ:": '4',
-        "Μάι:": '5'
-    }
-    return str(int(details[1])) + '/' + switcher.get(details[2], details[2])
+from ..functions import bofortToKm, convertDay
 
 
 class OkairosHourlySpider(scrapy.Spider):

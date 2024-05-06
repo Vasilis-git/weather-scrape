@@ -13,7 +13,10 @@ class okairosRealData(scrapy.Spider):
         day = response.xpath('//div[@id="city-weather"]//thead//small/text()').get()
         b = int(response.xpath('//div[@id="city-weather"]//tbody/tr[5]/td[1]/text()').get().strip()[:-3])
         wind_km = bofortToKm(b)
-        wind_dir = response.xpath('//div[@id="city-weather"]//tbody/tr[4]/td[1]/img/@src').get()[len('/img/icons/2_'):].split('.')[0]
+        try:
+            wind_dir = response.xpath('//div[@id="city-weather"]//tbody/tr[4]/td[1]/img/@src').get()[len('/img/icons/2_'):].split('.')[0]
+        except TypeError:
+            pass
         yetos = response.xpath('//div[@id="city-weather"]//tbody/tr[7]/td[1]/text()').get().strip()
         # every tr
         temp_counter = 1

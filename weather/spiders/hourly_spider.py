@@ -25,9 +25,13 @@ class OkairosHourlySpider(scrapy.Spider):
                     '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[@class="hour"]/text()').get()
                 if hour != "8:00" and hour != "14:00" and hour != "20:00":
                     continue
-                wind_dir = response.xpath(
-                    '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[4]/div/@class').get()[
-                           len('wind-1'):]
+                wind_dir = ""
+                try:
+                    wind_dir = response.xpath(
+                        '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[4]/div/@class').get()[
+                            len('wind-1'):]
+                except TypeError:
+                    pass
                 weather_cond = response.xpath(
                     '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[2]/div/@title').get()
 

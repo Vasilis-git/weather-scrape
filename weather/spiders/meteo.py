@@ -10,7 +10,6 @@ class Meteo_Data(scrapy.Spider):
     def parse(self, response):
         source = "meteo.gr"
         city = response.xpath('//*[@class="cityname flleft01"]/text()').get()
-        weather_cond = ''
 
         all_hours = response.xpath('//tr[@class="perhour rowmargin"]/td[1]//tr/td[1]/text()').getall()
         all_temps = response.xpath('//tr[@class="perhour rowmargin"]/td[2]/div/text()[1]').getall()

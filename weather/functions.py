@@ -18,16 +18,17 @@ def bofortToKm(b):
 
 
 # for usage with okairos.gr, day format: [day_n]/[month_abr]:
-def convertDay(day):
+def convertDay(day):  # expected input: [text] [day_n] [month_abr], [text] is optional
     details = day.split()
     switcher = {
         "Απρ:": '4',
         "Απρ": '4',
         "Μάι:": '5',
-        "Μάι": '5'
+        "Μάι": '5',
+        "ΜΑΪΟΥ": '5'
     }
     if len(details) == 2:
         offset = 0
     else:
         offset = 1
-    return str(int(details[offset])) + '/' + switcher.get(details[offset+1], details[offset+1])
+    return str(int(details[offset])) + '/' + switcher.get(details[offset + 1], details[offset + 1])

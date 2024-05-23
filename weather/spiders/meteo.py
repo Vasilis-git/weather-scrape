@@ -49,3 +49,8 @@ class Meteo_Data(scrapy.Spider):
 
     def start_requests(self):
         yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=37', self.parse)  # Άργος
+        yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=36', self.parse)  # Τρίπολη
+        yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=10', self.parse)  # Πάτρα
+        yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=15', self.parse)  # Καλαμάτα
+        yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=56', self.parse)  # Κόρινθος
+        yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=58', self.parse)  # Σπάρτη

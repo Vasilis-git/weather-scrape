@@ -28,10 +28,9 @@ def parse_fog(response):
 
 
 class XalaziSpider(scrapy.Spider):
-    name = 'xalazi_spider'
-    allowed_domains = ['xalazi.gr']
+    name = 'xalazi'
     # below link is for Tripoli
-    start_urls = ['http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178']
+    # start_urls = ['http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178']
 
     def parse(self, response):
         source = 'xalazi.gr'
@@ -82,9 +81,20 @@ class XalaziSpider(scrapy.Spider):
         #   "\n", "")[windindex:].strip()
 
     def start_requests(self):
+
         # Τρίπολη
-        yield scrapy.Request(self.start_urls[0], self.parse)
-        response = requests.get(self.start_urls[0])
-        tree = html.fromstring(response.content)
-        for link in tree.xpath('//div[@class="region-tree clearfix"]//li/a/@href'):
-            yield scrapy.Request(link, self.parse)
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178", self.parse)
+        # Ναύπλιο
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1086", self.parse)
+        # Μεγαλόπολη
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1067", self.parse)
+        # Άστρος
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=940", self.parse)
+        # Δημητσάνα
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=949", self.parse)
+        # Αίγιο
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=897", self.parse)
+        # response = requests.get(self.start_urls[0])
+        # tree = html.fromstring(response.content)
+        # for link in tree.xpath('//div[@class="region-tree clearfix"]//li/a/@href'):
+        #     yield scrapy.Request(link, self.parse)

@@ -71,3 +71,5 @@ class OkairosHourlySpider(scrapy.Spider):
         yield scrapy.Request('https://www.okairos.gr/πάτρα.html?v=ωριαία', self.parse)
         yield scrapy.Request('https://www.okairos.gr/καλαμάτα.html?v=ωριαία', self.parse)
         yield scrapy.Request('https://www.okairos.gr/κόρινθος.html?v=ωριαία', self.parse)
+        yield scrapy.Request('https://www.okairos.gr/ναύπλιο.html?v=ωριαία', self.parse)
+        yield scrapy.Request('https://www.okairos.gr/μεγαλόπολη.html?v=ωριαία', self.parse)

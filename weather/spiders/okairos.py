@@ -4,9 +4,7 @@ from ..functions import bofortToKm, convertDay
 
 
 class OkairosHourlySpider(scrapy.Spider):
-    name = 'hourly_spider'
-    allowed_domains = ['okairos.gr']
-    start_urls = ['https://www.okairos.gr/τρίπολη.html?v=ωριαία']
+    name = 'okairos'
 
     def parse(self, response):
         # days = response.xpath('//div[@class="wnfp"]').getall()
@@ -70,7 +68,6 @@ class OkairosHourlySpider(scrapy.Spider):
 
     def start_requests(self):
         yield scrapy.Request('https://www.okairos.gr/τρίπολη.html?v=ωριαία', self.parse)
-        # yield scrapy.Request('https://www.okairos.gr/μεγαλόπολη.html?v=ωριαία', self.parse)
-        # yield scrapy.Request('https://www.okairos.gr/βυτίνα.html?v=ωριαία', self.parse)
-        # yield scrapy.Request('https://www.okairos.gr/καλαμάτα.html?v=ωριαία', self.parse)
-        # yield scrapy.Request('https://www.okairos.gr/κόρινθος.html?v=ωριαία', self.parse)
+        yield scrapy.Request('https://www.okairos.gr/πάτρα.html?v=ωριαία', self.parse)
+        yield scrapy.Request('https://www.okairos.gr/καλαμάτα.html?v=ωριαία', self.parse)
+        yield scrapy.Request('https://www.okairos.gr/κόρινθος.html?v=ωριαία', self.parse)

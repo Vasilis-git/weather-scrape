@@ -25,7 +25,10 @@ def convertDay(day):  # expected input: [text] [day_n] [month_abr], [text] is op
         "Απρ": '4',
         "Μάι:": '5',
         "Μάι": '5',
-        "ΜΑΪΟΥ": '5'
+        "ΜΑΪΟΥ": '5',
+        "Ιούν:": '6',
+        "Ιούλ:": '7',
+        "Άυγ:": '8'
     }
     if len(details) == 2:
         offset = 0

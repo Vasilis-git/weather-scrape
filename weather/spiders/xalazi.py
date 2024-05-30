@@ -1,7 +1,7 @@
 import scrapy
 from datetime import datetime as dt
-from lxml import html
-import requests
+# from lxml import html
+# import requests
 from ..functions import bofortToKm
 
 
@@ -84,16 +84,20 @@ class XalaziSpider(scrapy.Spider):
 
         # Τρίπολη
         yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178", self.parse)
-        # Ναύπλιο
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1086", self.parse)
         # Μεγαλόπολη
         yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1067", self.parse)
-        # Άστρος
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=940", self.parse)
-        # Δημητσάνα
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=949", self.parse)
         # Αίγιο
         yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=897", self.parse)
+        # Γύθειο
+        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=914', self.parse)
+        # Αμαλιάδα
+        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=987', self.parse)
+        # Άστρος
+        # yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=940", self.parse)
+        # Ναύπλιο
+        # yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1086", self.parse)
+        # Δημητσάνα
+        # yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=949", self.parse)
         # response = requests.get(self.start_urls[0])
         # tree = html.fromstring(response.content)
         # for link in tree.xpath('//div[@class="region-tree clearfix"]//li/a/@href'):

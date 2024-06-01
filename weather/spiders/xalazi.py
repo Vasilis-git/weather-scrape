@@ -19,7 +19,7 @@ def timeStrToInt(b):
         "09": 9,
 
     }
-    return switcher.get(b, b)
+    return switcher.get(b)
 
 
 def parse_fog(response):
@@ -50,13 +50,9 @@ class XalaziSpider(scrapy.Spider):
             humidity = float(
                 response.xpath(
                     '//*[@class="t orangered"]/tr[' + str(counter) + ']/td[4]//text()').get().strip()[:-1])
-            windindex = int(
-                response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().find(" "))
-            b = int(
-                response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get()[
-                :windindex].strip()
-            )
+            b = int(response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[0])
             wind = float(bofortToKm(b))
+            wind_dir = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[1][-2:]
             yield {
                 'src': source,
                 'city': city,
@@ -65,9 +61,10 @@ class XalaziSpider(scrapy.Spider):
                 'hour': hour,
                 'temperature': temperature,
                 'wind_km': wind,
+                'wind_dir': wind_dir,
                 'humidity': humidity,
-                'barometer': "",
-                'yetos': ""
+                # 'barometer': "",
+                # 'yetos': ""
             }
             counter += 1
 

@@ -14,7 +14,21 @@ def bofortToKm(b):
         11: 110,
         12: 124
     }
-    return switcher.get(b, 0)
+    return switcher.get(b)
+
+
+def convertWindDir(wind_dir):
+    switcher = {
+        'N': 'B',
+        'S': 'N',
+        'E': 'A',
+        'W': 'Δ',
+        'NE': 'BA',
+        'NW': 'ΒΔ',
+        'SE': 'ΝΑ',
+        'SW': 'ΝΔ'
+    }
+    return switcher.get(wind_dir)
 
 
 # for usage with okairos.gr, day format: [day_n]/[month_abr]:
@@ -34,4 +48,4 @@ def convertDay(day):  # expected input: [text] [day_n] [month_abr], [text] is op
         offset = 0
     else:
         offset = 1
-    return str(int(details[offset])) + '/' + switcher.get(details[offset + 1], details[offset + 1])
+    return str(int(details[offset])) + '/' + switcher.get(details[offset + 1])

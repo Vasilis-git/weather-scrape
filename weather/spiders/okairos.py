@@ -1,6 +1,6 @@
 import scrapy
 from datetime import datetime as dt
-from ..functions import bofortToKm, convertDay
+from ..functions import bofortToKm, convertDay, convertWindDir
 
 
 class OkairosHourlySpider(scrapy.Spider):
@@ -21,8 +21,6 @@ class OkairosHourlySpider(scrapy.Spider):
                            int(response.xpath('count(//*[@class="wnfp"]/table[' + str(counter) + ']//tr)').get()[:-2])):
                 hour = response.xpath(
                     '//*[@class="wnfp"]/table[' + str(counter) + ']//tr[' + str(i) + ']/td[@class="hour"]/text()').get()
-                if hour != "8:00" and hour != "14:00" and hour != "20:00":
-                    continue
                 wind_dir = ""
                 try:
                     wind_dir = response.xpath(
@@ -57,7 +55,7 @@ class OkairosHourlySpider(scrapy.Spider):
                     'weather_cond': weather_cond,
                     'temperature': temperature,
                     'wind_km': wind,
-                    'wind_dir': wind_dir,
+                    'wind_dir': convertWindDir(wind_dir),
                     # 'humidity': humidity,
                     # 'barometer': barometer,
                     'yetos': yetos

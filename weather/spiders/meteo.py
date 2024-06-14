@@ -4,6 +4,24 @@ from datetime import datetime as dt
 from weather.functions import convertDay
 
 
+def convertMonth(monthName):
+    switcher = {
+        'ΙΑΝΟΥΑΡΙΟΥ': '1',
+        'ΦΕΒΡΟΥΑΡΙΟΥ': '2',
+        'ΜΑΡΤΙΟΥ': '3',
+        'ΑΠΡΙΛΙΟΥ': '4',
+        'ΜΑΙΟΥ': '5',
+        'IOYNIOY': '6',
+        'ΙΟΥΛΙΟΥ': '7',
+        'ΑΥΓΟΥΣΤΟΥ': '8',
+        'ΣΕΠΤΕΜΒΡΙΟΥ': '9',
+        'ΟΚΤΩΒΡΙΟΥ': '10',
+        'ΝΟΕΜΒΡΙΟΥ': '11',
+        'ΔΕΚΕΜΒΡΙΟΥ': '12'
+    }
+    return switcher.get(monthName)
+
+
 class Meteo_Data(scrapy.Spider):
     name = "meteo"
 
@@ -23,7 +41,7 @@ class Meteo_Data(scrapy.Spider):
         total_rows = int(response.xpath('count(//tr[@class="perhour rowmargin"])').get().split('.')[0])
         for tr_counter in range(0, total_rows):
             hour = all_hours[tr_counter]
-            month_name = month_names[day_counter].strip()
+            month_name = convertMonth(month_names[day_counter].strip())
             month_day = month_days[day_counter]
             day = month_day + " " + month_name
             temperature = all_temps[tr_counter]

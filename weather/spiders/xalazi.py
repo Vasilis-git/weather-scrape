@@ -65,8 +65,6 @@ class XalaziSpider(scrapy.Spider):
                 'humidity': humidity,
                 'wind_dir': wind_dir,
                 'weather_cond': weather_cond
-                # 'barometer': "",
-                # 'yetos': ""
             }
             counter += 1
 

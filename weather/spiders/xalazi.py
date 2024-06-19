@@ -53,6 +53,7 @@ class XalaziSpider(scrapy.Spider):
             b = int(response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[0])
             wind = float(bofortToKm(b))
             wind_dir = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[1][-2:]
+            weather_cond = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[6]/@title').get()
             yield {
                 'src': source,
                 'city': city,
@@ -63,6 +64,7 @@ class XalaziSpider(scrapy.Spider):
                 'wind_km': wind,
                 'wind_dir': wind_dir,
                 'humidity': humidity,
+                'weather_cond': weather_cond
                 # 'barometer': "",
                 # 'yetos': ""
             }

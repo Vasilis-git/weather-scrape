@@ -62,8 +62,8 @@ class XalaziSpider(scrapy.Spider):
                 'hour': hour,
                 'temperature': temperature,
                 'wind_km': wind,
-                'wind_dir': wind_dir,
                 'humidity': humidity,
+                'wind_dir': wind_dir,
                 'weather_cond': weather_cond
                 # 'barometer': "",
                 # 'yetos': ""

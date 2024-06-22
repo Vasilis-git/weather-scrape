@@ -1,3 +1,6 @@
+CONNECTION = "postgres://sensors:DKM-sensors37@localhost:5000/"  # +dbname
+
+
 def bofortToKm(b):
     switcher = {
         0: 1,

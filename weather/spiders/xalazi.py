@@ -1,8 +1,7 @@
 import scrapy
 from datetime import datetime as dt
-# from lxml import html
-# import requests
-from ..functions import bofortToKm
+import psycopg2
+from ..functions import bofortToKm, CONNECTION
 
 
 def timeStrToInt(b):
@@ -29,13 +28,14 @@ def parse_fog(response):
 
 class XalaziSpider(scrapy.Spider):
     name = 'xalazi'
-    # below link is for Tripoli
-    # start_urls = ['http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178']
+    xalazi_Con_str = CONNECTION + "xalazidata"
+    with psycopg2.connect(xalazi_Con_str) as conn:
+        cursor = conn.cursor()
 
     def parse(self, response):
         source = 'xalazi.gr'
         city = response.xpath('//div[@class="top"]/div[@class="name"]/text()').get()[len('Πρόγνωση 5 ημερών για '):]
-
+        data_columns = "(src, city, timecrawl, day, hour, temperature, wind_km, humidity, wind_dir, weather_cond)"
         counter = 1
         day = ""
         for table_row in response.xpath('//table[@class="t orangered"]//tr').getall():
@@ -52,12 +52,14 @@ class XalaziSpider(scrapy.Spider):
                     '//*[@class="t orangered"]/tr[' + str(counter) + ']/td[4]//text()').get().strip()[:-1])
             b = int(response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[0])
             wind = float(bofortToKm(b))
-            wind_dir = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[1][-2:]
+            wind_dir = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[5]//text()').get().split()[
+                           1][-2:]
             weather_cond = response.xpath('//*[@class="t orangered"]/tr[' + str(counter) + ']/td[6]/@title').get()
+            timecrawl = dt.now()
             yield {
                 'src': source,
                 'city': city,
-                'timecrawl': dt.now(),
+                'timecrawl': timecrawl,
                 'day': day,
                 'hour': hour,
                 'temperature': temperature,
@@ -67,6 +69,10 @@ class XalaziSpider(scrapy.Spider):
                 'weather_cond': weather_cond
             }
             counter += 1
+            query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
+            values = (source, city, timecrawl, day, hour, temperature, wind, humidity, wind_dir, weather_cond)
+            self.cursor.execute(query, values)
+            self.conn.commit()
 
         # windends    = (rows[6].xpath('td//text()')[4].extract()).find(" ")
         # winddire    = (rows[6].xpath('td//text()')[4].extract()).find("at")
@@ -80,15 +86,20 @@ class XalaziSpider(scrapy.Spider):
     def start_requests(self):
 
         # Τρίπολη
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178", self.parse)
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1178",
+                             self.parse)
         # Μεγαλόπολη
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1067", self.parse)
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=1067",
+                             self.parse)
         # Αίγιο
-        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=897", self.parse)
+        yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=897",
+                             self.parse)
         # Γύθειο
-        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=914', self.parse)
+        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=914',
+                             self.parse)
         # Αμαλιάδα
-        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=987', self.parse)
+        yield scrapy.Request('http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=987',
+                             self.parse)
         # Άστρος
         # yield scrapy.Request("http://www.xalazi.gr/prognwsh-kairou/prognosi-5-imeron?type=FiveDays&city=940", self.parse)
         # Ναύπλιο

@@ -1,7 +1,7 @@
 import scrapy
-from datetime import datetime as dt
 import psycopg2
-from ..functions import bofortToKm, CONNECTION
+from datetime import datetime as dt
+from weather.functions import bofortToKm, CONNECTION
 
 
 def timeStrToInt(b):

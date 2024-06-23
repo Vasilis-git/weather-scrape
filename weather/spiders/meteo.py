@@ -1,11 +1,14 @@
 import scrapy
+import psycopg2
 from datetime import datetime as dt
 
-from ..functions import convertDay
+from ..functions import convertDay, CONNECTION
 
 
 class Meteo_Data(scrapy.Spider):
     name = "meteo"
+    with psycopg2.connect(CONNECTION) as conn:
+        cursor = conn.cursor()
 
     def parse(self, response):
         source = "meteo.gr"
@@ -21,6 +24,7 @@ class Meteo_Data(scrapy.Spider):
         month_names = response.xpath('//div[@class="content"]//span[@class="monthNumbercf"]/text()').getall()
         day_counter = 0
         total_rows = int(response.xpath('count(//tr[@class="perhour rowmargin"])').get().split('.')[0])
+        data_columns = "(src, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)"
         for tr_counter in range(0, total_rows):
             hour = all_hours[tr_counter]
             month_name = month_names[day_counter].strip()
@@ -32,11 +36,13 @@ class Meteo_Data(scrapy.Spider):
             wind_dir = all_wind_dirs[tr_counter][-2:].replace(' ', '')
             weather_cond = all_wthr_cond[tr_counter][:-1]
 
+            timecrawl = dt.now()
+            day = convertDay(day)
             yield {
                 'src': source,
                 'city': city,
-                'timecrawl': dt.now(),
-                'day': convertDay(day),
+                'timecrawl': timecrawl,
+                'day': day,
                 'hour': hour,
                 'temperature': temperature,
                 'humidity': humidity,
@@ -46,6 +52,11 @@ class Meteo_Data(scrapy.Spider):
             }
             if hour == "21:00":
                 day_counter += 1
+            query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
+            values = (source, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)
+            self.cursor.execute(query, values)
+
+        self.conn.commit()
 
     def start_requests(self):
         yield scrapy.Request('https://meteo.gr/cf.cfm?city_id=37', self.parse)  # Άργος

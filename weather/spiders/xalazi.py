@@ -28,8 +28,7 @@ def parse_fog(response):
 
 class XalaziSpider(scrapy.Spider):
     name = 'xalazi'
-    xalazi_Con_str = CONNECTION + "xalazidata"
-    with psycopg2.connect(xalazi_Con_str) as conn:
+    with psycopg2.connect(CONNECTION) as conn:
         cursor = conn.cursor()
 
     def parse(self, response):
@@ -72,7 +71,8 @@ class XalaziSpider(scrapy.Spider):
             query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
             values = (source, city, timecrawl, day, hour, temperature, wind, humidity, wind_dir, weather_cond)
             self.cursor.execute(query, values)
-            self.conn.commit()
+
+        self.conn.commit()
 
         # windends    = (rows[6].xpath('td//text()')[4].extract()).find(" ")
         # winddire    = (rows[6].xpath('td//text()')[4].extract()).find("at")

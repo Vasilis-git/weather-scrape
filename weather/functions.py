@@ -1,4 +1,4 @@
-CONNECTION = "postgres://sensors:DKM-sensors37@localhost:5000/"  # +dbname
+CONNECTION = "postgres://sensors:DKM-sensors37@localhost:5432/sensors"
 
 
 def bofortToKm(b):

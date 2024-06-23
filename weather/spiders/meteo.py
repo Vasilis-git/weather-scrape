@@ -52,7 +52,7 @@ class Meteo_Data(scrapy.Spider):
             }
             if hour == "21:00":
                 day_counter += 1
-            query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
+            query = "INSERT INTO meteodata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
             values = (source, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)
             self.cursor.execute(query, values)
 

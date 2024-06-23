@@ -61,7 +61,7 @@ class OkairosHourlySpider(scrapy.Spider):
                     'air_pressure': air_pressure
                 }
             counter = counter + 1
-            query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
+            query = "INSERT INTO okairosdata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
             values = (source, city, timecrawl, day, hour, weather_cond, temperature, wind, wind_dir, yetos, cloudiness, humidity, air_pressure)
             self.cursor.execute(query, values)
 

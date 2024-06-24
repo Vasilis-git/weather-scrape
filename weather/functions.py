@@ -70,4 +70,4 @@ def convertDay(day):  # expected input: [text] [day_n] [month_abr], [text] is op
         offset = 0
     else:
         offset = 1
-    return str(int(details[offset])) + '/' + switcher.get(details[offset + 1])
+    return details[offset] + '/' + switcher.get(details[offset + 1])

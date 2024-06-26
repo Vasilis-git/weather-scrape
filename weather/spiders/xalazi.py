@@ -34,7 +34,7 @@ class XalaziSpider(scrapy.Spider):
     def parse(self, response):
         source = 'xalazi.gr'
         city = response.xpath('//div[@class="top"]/div[@class="name"]/text()').get()[len('Πρόγνωση 5 ημερών για '):]
-        data_columns = "(src, city, timecrawl, day, hour, temperature, wind_km, humidity, wind_dir, weather_cond)"
+        data_columns = "(src, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)"
         counter = 1
         day = ""
         for table_row in response.xpath('//table[@class="t orangered"]//tr').getall():
@@ -62,14 +62,14 @@ class XalaziSpider(scrapy.Spider):
                 'day': day,
                 'hour': hour,
                 'temperature': temperature,
-                'wind_km': wind,
                 'humidity': humidity,
+                'wind_km': wind,
                 'wind_dir': wind_dir,
                 'weather_cond': weather_cond
             }
             counter += 1
             query = "INSERT INTO xalazidata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
-            values = (source, city, timecrawl, day, hour, temperature, wind, humidity, wind_dir, weather_cond)
+            values = (source, city, timecrawl, day, hour, temperature, humidity, wind,  wind_dir, weather_cond)
             self.cursor.execute(query, values)
 
         self.conn.commit()

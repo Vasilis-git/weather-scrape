@@ -1,7 +1,7 @@
 import scrapy
 import psycopg2
 from datetime import datetime as dt
-from ..functions import bofortToKm, convertDay, convertWindDir, CONNECTION
+from weather.functions import bofortToKm, convertDay, convertWindDir, CONNECTION
 
 
 class OkairosHourlySpider(scrapy.Spider):

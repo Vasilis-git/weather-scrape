@@ -32,7 +32,9 @@ class Meteo_Data(scrapy.Spider):
             day = month_day + " " + month_name
             temperature = all_temps[tr_counter]
             humidity = all_humid[tr_counter]
-            wind_km = all_wind_km[tr_counter][:2].replace(' ', '')
+            wind_km = all_wind_km[tr_counter].split()[0]
+            if wind_km == 'km/h':
+                wind_km = ''
             wind_dir = all_wind_dirs[tr_counter][-2:].replace(' ', '')
             weather_cond = all_wthr_cond[tr_counter][:-1]
 

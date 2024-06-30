@@ -17,8 +17,8 @@ class Meteo_Data(scrapy.Spider):
         all_hours = response.xpath('//tr[@class="perhour rowmargin"]/td[1]//tr/td[1]/text()').getall()
         all_temps = response.xpath('//tr[@class="perhour rowmargin"]/td[2]/div/text()[1]').getall()
         all_humid = response.xpath('//tr[@class="perhour rowmargin"]/td[2]/div/div/text()').getall()
-        all_wind_km = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr/td[1]/span/text()[1]').getall()
-        all_wind_dirs = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr/td[1]/text()[1]').getall()
+        all_wind_km = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr[1]/td[1]/span/text()[1]').getall()
+        all_wind_dirs = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr[1]/td[1]/text()[1]').getall()
         all_wthr_cond = response.xpath('//tr[@class="perhour rowmargin"]/td[5]//tr[3]/td/text()[1]').getall()
         month_days = response.xpath('//div[@class="content"]//span[@class="dayNumbercf"]/text()[1]').getall()
         month_names = response.xpath('//div[@class="content"]//span[@class="monthNumbercf"]/text()').getall()
@@ -33,8 +33,6 @@ class Meteo_Data(scrapy.Spider):
             temperature = all_temps[tr_counter]
             humidity = all_humid[tr_counter]
             wind_km = all_wind_km[tr_counter].split()[0]
-            if wind_km == 'km/h':
-                wind_km = ''
             wind_dir = all_wind_dirs[tr_counter][-2:].replace(' ', '')
             weather_cond = all_wthr_cond[tr_counter][:-1]
 

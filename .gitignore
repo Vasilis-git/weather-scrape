@@ -160,3 +160,5 @@ cython_debug/
 .idea/
 *.json
 *.csv
+/data/data.sql
+/data/old_data.sql

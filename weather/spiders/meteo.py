@@ -50,7 +50,7 @@ class Meteo_Data(scrapy.Spider):
                 'wind_dir': wind_dir,
                 'weather_cond': weather_cond,
             }
-            if hour == "21:00":
+            if hour == "23:00":
                 day_counter += 1
             query = "INSERT INTO meteodata {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(data_columns)
             values = (source, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)

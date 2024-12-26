@@ -7,6 +7,7 @@ from ..functions import convertDay, CONNECTION
 
 class Meteo_Data(scrapy.Spider):
     name = "meteo"
+
     with psycopg2.connect(CONNECTION) as conn:
         cursor = conn.cursor()
 
@@ -16,12 +17,16 @@ class Meteo_Data(scrapy.Spider):
 
         all_hours = response.xpath('//tr[@class="perhour rowmargin"]/td[1]//tr/td[1]/text()').getall()
         all_temps = response.xpath('//tr[@class="perhour rowmargin"]/td[2]/div/text()[1]').getall()
-        all_humid = response.xpath('//tr[@class="perhour rowmargin"]/td[2]/div/div/text()').getall()
+        all_humid = response.xpath('//tr[@class="perhour rowmargin"]//td[@class=" humidity"]/text()').getall()
         all_wind_km = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr[1]/td[1]/span/text()[1]').getall()
         all_wind_dirs = response.xpath('//tr[@class="perhour rowmargin"]/td[4]//tr[1]/td[1]/text()[1]').getall()
         all_wthr_cond = response.xpath('//tr[@class="perhour rowmargin"]/td[5]//tr[3]/td/text()[1]').getall()
         month_days = response.xpath('//div[@class="content"]//span[@class="dayNumbercf"]/text()[1]').getall()
         month_names = response.xpath('//div[@class="content"]//span[@class="monthNumbercf"]/text()').getall()
+        for s in month_names:
+            if '01/01' in s:
+                month_days.append('1')
+        month_names = ['ΙΑΝΟΥΑΡΙΟΥ' if '01/01' in s else s for s in month_names]
         day_counter = 0
         total_rows = int(response.xpath('count(//tr[@class="perhour rowmargin"])').get().split('.')[0])
         data_columns = "(src, city, timecrawl, day, hour, temperature, humidity, wind_km, wind_dir, weather_cond)"
@@ -31,7 +36,7 @@ class Meteo_Data(scrapy.Spider):
             month_day = month_days[day_counter]
             day = month_day + " " + month_name
             temperature = all_temps[tr_counter]
-            humidity = all_humid[tr_counter]
+            humidity = all_humid[tr_counter].strip()
             wind_km = all_wind_km[tr_counter].split()[0]
             wind_dir = all_wind_dirs[tr_counter][-2:].replace(' ', '')
             weather_cond = all_wthr_cond[tr_counter][:-1]

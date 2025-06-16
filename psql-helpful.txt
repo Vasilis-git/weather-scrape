@@ -1,0 +1,18 @@
+ssh dkms@192.168.48.231
+Password: 20@$dkmsFoit
+
+psql -Usensors -h localhost -W
+password: DKM-sensors37
+
+
+CREATE TABLE xalaziData (
+    src TEXT,
+    city TEXT,
+    timecrawl TIMESTAMPTZ,
+    day TEXT,
+    hour TEXT,
+    temperature DOUBLE PRECISION,
+    wind_km DOUBLE PRECISION,
+    humidity DOUBLE PRECISION,
+    barometer DOUBLE PRECISION
+);

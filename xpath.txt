@@ -1,0 +1,42 @@
+xpath:
+/: direct child of whatever selected
+//: somewhere below it
+
+ex:
+<article>
+ <div>
+<a>
+</div>
+
+//article/a :nothing, a isn't a direct child
+//article//a: a's contents
+
+@ : refer to attributes -> after / to refer to direct child
+/.. : refer to tags above
+a[@title]: all a that have a title, returns the whole a tag
+a[*]: all a tags that have something in them
+a/*: give me that something inside of a tags
+
+//*[@*]: anything that contains any attribute
+
+//div[@class="row"] : all divs that have class "row", returns the whole div
+//div[contains(@class,"col-sm-8")] : all divs that contain a class named col-sm-8, returns whole div
+
+//*[text()[contains(., "Book")]]: text from anything, then from that keep those that contain "Book" in the text
+(. refers to text())
+
+//*[count(.//li)=20]: all elements that have 20 li elements inside of them
+//div/following-sibling::div -> all divs that come after another <div> </div> 
+preceding-sibling: the opposite
+
+//div[@id="promotions_left"]/following-sibling::div[1] -> all divs that come after a div with specified id,
+and from those get the first
+
+//div[ancestor::article] -> all divs with ancestor article, same as //article/div
+
+
+//article[p[@class="star-rating One"]]/h3/a/@title |
+//article[p[@class="star-rating One"]]//p[@class="price_color"] ->
+-> all books with one star rating, get the title and the price (books.toscrape.com)
+|: pipeline operator
+
